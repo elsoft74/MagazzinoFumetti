@@ -215,7 +215,6 @@ public class FunzioniDB {
                     String venditore=rr.getString("venditore");
                     
                     Persona persona=new Persona(nome,cognome,id,denominazione,indirizzo,telefono,email,venditore,acquirente);
-                    System.out.println("Letto:"+persona);
                     out.add(persona);
                 }
             }
