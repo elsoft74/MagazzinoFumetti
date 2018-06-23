@@ -24,8 +24,40 @@ class Persona {
         return id;
     }
     
+    String getNome() {
+        return nome;
+    }
+    
+    public String getCognome() {
+        return cognome;
+    }
+
+    public String getDenominazione() {
+        return denominazione;
+    }
+    
+    public String getIndirizzo() {
+        return indirizzo;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public String getTelefono() {
+        return telefono;
+    }
+    
+    public String getVenditore() {
+        return venditore;
+    }
+    
+    public String getAcquirente() {
+        return acquirente;
+    }
+    
     public String toString(){
-        return nome+" "+cognome+" ("+denominazione+")";
+        return nome/*+" "+cognome+" ("+denominazione+")"*/;
     }
     
     public Persona(){

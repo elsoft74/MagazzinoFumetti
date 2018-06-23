@@ -5,17 +5,27 @@
  */
 package magazzinofumetti;
 
+import java.util.HashSet;
+import javax.swing.ButtonModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author elsoft
  */
 public class Anagrafiche extends javax.swing.JFrame {
 
+    private int selId;
+    private HashSet<Persona> elenco;
+
     /**
      * Creates new form Anagrafiche
      */
     public Anagrafiche() {
         initComponents();
+        selId=-1;
+        elenco=FunzioniDB.leggiPersone();
+        aggiornaElenco();        
     }
 
     /**
@@ -27,30 +37,36 @@ public class Anagrafiche extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        filtraPersoneButtonGroup = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        nomeTextField = new javax.swing.JTextField();
+        cognomeTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        descrizioneTextField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        indirizzoTextField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
+        emailTextField = new javax.swing.JTextField();
+        cellulareTextField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
+        acquirenteCheckBox = new javax.swing.JCheckBox();
+        venditoreCheckBox = new javax.swing.JCheckBox();
         okButton = new javax.swing.JButton();
         annullaButton = new javax.swing.JButton();
         cancellaButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        elencoTable = new javax.swing.JTable();
         tuttiRadioButton = new javax.swing.JRadioButton();
         acquirentiRadioButton = new javax.swing.JRadioButton();
         venditoriRadioButton = new javax.swing.JRadioButton();
+        nuovoButton = new javax.swing.JButton();
+        filtraPersoneButtonGroup.add(tuttiRadioButton);
+        filtraPersoneButtonGroup.add(acquirentiRadioButton);
+        filtraPersoneButtonGroup.add(venditoriRadioButton);
+        tuttiRadioButton.setSelected(true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Anagrafiche");
@@ -61,23 +77,22 @@ public class Anagrafiche extends javax.swing.JFrame {
 
         jLabel3.setText("Descrizione");
 
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
-            }
-        });
-
         jLabel4.setText("Indirizzo");
 
         jLabel5.setText("e-mail");
 
-        jLabel6.setText("Cellulare");
+        jLabel6.setText("Telefono");
 
-        jCheckBox1.setText("Acquirente");
+        acquirenteCheckBox.setText("Acquirente");
 
-        jCheckBox2.setText("Venditore");
+        venditoreCheckBox.setText("Venditore");
 
         okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         annullaButton.setText("Annulla");
         annullaButton.addActionListener(new java.awt.event.ActionListener() {
@@ -104,37 +119,37 @@ public class Anagrafiche extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField3)
+                                .addComponent(descrizioneTextField)
                                 .addComponent(jLabel3)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(nomeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel1))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel2)
-                                        .addComponent(jTextField2)))
+                                        .addComponent(cognomeTextField)))
                                 .addComponent(jLabel4)
-                                .addComponent(jTextField4)
+                                .addComponent(indirizzoTextField)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel5))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel6)
-                                        .addComponent(jTextField6))))
+                                        .addComponent(cellulareTextField))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
+                                .addComponent(acquirenteCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox2)))
+                                .addComponent(venditoreCheckBox)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {annullaButton, cancellaButton, okButton});
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jTextField1, jTextField2, jTextField5, jTextField6});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cellulareTextField, cognomeTextField, emailTextField, nomeTextField});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,28 +160,28 @@ public class Anagrafiche extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nomeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cognomeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(descrizioneTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(indirizzoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cellulareTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox2))
+                    .addComponent(acquirenteCheckBox)
+                    .addComponent(venditoreCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
@@ -175,7 +190,7 @@ public class Anagrafiche extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        elencoTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -192,13 +207,40 @@ public class Anagrafiche extends javax.swing.JFrame {
                 "Nome", "Cognome", "Decrizione"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        elencoTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                elencoTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(elencoTable);
 
         tuttiRadioButton.setText("Tutti");
+        tuttiRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioButtonsActionPerformed(evt);
+            }
+        });
 
         acquirentiRadioButton.setLabel("Acquirenti");
+        acquirentiRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioButtonsActionPerformed(evt);
+            }
+        });
 
         venditoriRadioButton.setLabel("Venditori");
+        venditoriRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioButtonsActionPerformed(evt);
+            }
+        });
+
+        nuovoButton.setText("Nuovo");
+        nuovoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuovoButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -209,11 +251,14 @@ public class Anagrafiche extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tuttiRadioButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(acquirentiRadioButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(venditoriRadioButton)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(tuttiRadioButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(acquirentiRadioButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(venditoriRadioButton))
+                            .addComponent(nuovoButton))
                         .addGap(0, 61, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -227,7 +272,9 @@ public class Anagrafiche extends javax.swing.JFrame {
                     .addComponent(tuttiRadioButton)
                     .addComponent(acquirentiRadioButton)
                     .addComponent(venditoriRadioButton))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nuovoButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -254,14 +301,118 @@ public class Anagrafiche extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
-
     private void annullaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annullaButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_annullaButtonActionPerformed
 
+    
+    private void elencoTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_elencoTableMouseClicked
+        int row=elencoTable.getSelectedRow();
+        if (row!=-1) {
+            Persona selezionata=(Persona)elencoTable.getValueAt(row, 0);
+            aggiornaDettagli(selezionata);
+        }
+    }//GEN-LAST:event_elencoTableMouseClicked
+
+    private void radioButtonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioButtonsActionPerformed
+        String selezionato=evt.getActionCommand();
+        switch (selezionato) {
+            case "Tutti":
+                elenco=FunzioniDB.leggiPersone();
+                break;
+            case "Acquirenti":
+                elenco=FunzioniDB.leggiAcquirenti();
+                break;
+            case "Venditori":
+                elenco=FunzioniDB.leggiVenditori();
+                break;
+            default:
+                elenco=FunzioniDB.leggiPersone();
+        }
+        aggiornaElenco();
+    }//GEN-LAST:event_radioButtonsActionPerformed
+
+    private void nuovoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuovoButtonActionPerformed
+        svuotaDettagli();
+        nomeTextField.requestFocus();
+    }//GEN-LAST:event_nuovoButtonActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        String nome=nomeTextField.getText().trim();
+        String cognome=cognomeTextField.getText();
+        String descrizione=descrizioneTextField.getText().trim();
+        String indirizzo=indirizzoTextField.getText().trim();
+        String email=emailTextField.getText().trim();
+        String telefono=cellulareTextField.getText().trim();
+        String acquirente=(acquirenteCheckBox.isSelected())?"S":"N";
+        String venditore=(venditoreCheckBox.isSelected())?"S":"N";
+        String err="";
+        if (nome.equals("")) {
+            err+="Nome non può essere vuoto.\n";
+        }
+        if (cognome.equals("")) {
+            err+="Cognome non può essere vuoto.\n";
+        }
+        if (email.equals("")&&telefono.equals("")) {
+            err+="e-mail e telefono non possono\nessere entrambi vuoti.\n";
+        }
+        if (acquirente.equals("N")&&venditore.equals("N")) {
+            err+="Devi selezionare almento uno\ntra acquirente e venditore.\n";
+        }
+        if (err.equals("")) {
+            Persona pers=new Persona(nome,cognome, selId, descrizione,indirizzo, email, telefono, venditore, acquirente);
+            if (pers.getId()>-1) {
+                err=FunzioniDB.aggiornaPersona(pers);
+            } else {
+                err=FunzioniDB.inserisciPersona(pers);
+            }
+            if (err.equals("")) {
+                if (tuttiRadioButton.isSelected()) {
+                    elenco=FunzioniDB.leggiPersone();
+                } else if (acquirentiRadioButton.isSelected()) {
+                    elenco=FunzioniDB.leggiAcquirenti();
+                    } else  {
+                        elenco=FunzioniDB.leggiVenditori();
+                            }
+                aggiornaElenco();
+                svuotaDettagli();
+            } else {
+                JOptionPane.showMessageDialog(null, err, "Errore!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, err, "Errore!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    private void aggiornaElenco() {
+        elencoTable.setModel(new ElencoPersoneTableModel(elenco.iterator()));
+        svuotaDettagli();
+    }
+    
+    private void aggiornaDettagli(Persona selezionata) {
+        nomeTextField.setText(selezionata.getNome());
+        cognomeTextField.setText(selezionata.getCognome());
+        descrizioneTextField.setText(selezionata.getDenominazione());
+        indirizzoTextField.setText(selezionata.getIndirizzo());
+        emailTextField.setText(selezionata.getEmail());
+        cellulareTextField.setText(selezionata.getTelefono());
+        acquirenteCheckBox.setSelected(selezionata.getAcquirente().equals("S"));
+        venditoreCheckBox.setSelected(selezionata.getVenditore().equals("S"));
+        selId=selezionata.getId();
+    }
+    
+    private void svuotaDettagli() {
+        nomeTextField.setText("");
+        cognomeTextField.setText("");
+        descrizioneTextField.setText("");
+        indirizzoTextField.setText("");
+        emailTextField.setText("");
+        cellulareTextField.setText("");
+        acquirenteCheckBox.setSelected(false);
+        venditoreCheckBox.setSelected(false);
+        selId=-1;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -298,11 +449,17 @@ public class Anagrafiche extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox acquirenteCheckBox;
     private javax.swing.JRadioButton acquirentiRadioButton;
     private javax.swing.JButton annullaButton;
     private javax.swing.JButton cancellaButton;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JTextField cellulareTextField;
+    private javax.swing.JTextField cognomeTextField;
+    private javax.swing.JTextField descrizioneTextField;
+    private javax.swing.JTable elencoTable;
+    private javax.swing.JTextField emailTextField;
+    private javax.swing.ButtonGroup filtraPersoneButtonGroup;
+    private javax.swing.JTextField indirizzoTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -312,15 +469,14 @@ public class Anagrafiche extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField nomeTextField;
+    private javax.swing.JButton nuovoButton;
     private javax.swing.JButton okButton;
     private javax.swing.JRadioButton tuttiRadioButton;
+    private javax.swing.JCheckBox venditoreCheckBox;
     private javax.swing.JRadioButton venditoriRadioButton;
     // End of variables declaration//GEN-END:variables
+
+    
+
 }

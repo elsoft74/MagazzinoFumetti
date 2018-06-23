@@ -186,6 +186,10 @@ public class FunzioniDB {
         return out;
     }
     
+    public static HashSet leggiPersone(){
+        return leggiPersone("");
+    }
+    
     private static HashSet leggiPersone(String par){
         connetti();
         HashSet<Persona> out=new HashSet();
@@ -214,7 +218,7 @@ public class FunzioniDB {
                     String acquirente=rr.getString("acquirente");
                     String venditore=rr.getString("venditore");
                     
-                    Persona persona=new Persona(nome,cognome,id,denominazione,indirizzo,telefono,email,venditore,acquirente);
+                    Persona persona=new Persona(nome,cognome,id,denominazione,indirizzo,email,telefono,venditore,acquirente);
                     out.add(persona);
                 }
             }
@@ -224,5 +228,61 @@ public class FunzioniDB {
         chiudiConnessione();
         return out;
     }
-    
+
+    static String aggiornaPersona(Persona pers) {
+        connetti();
+        String out="Errore durante l'aggiornamento";
+        try {
+            if (!c.isClosed()){
+                String query="UPDATE `persone` SET 'nome'=?, 'cognome'=?,'denominazione'=?,'indirizzo'=?,'telefono'=?,'email'=?,'venditore'=?,'acquirente'=? WHERE 'id'=?";
+                PreparedStatement stmt=c.prepareStatement(query);
+                stmt=c.prepareStatement(query);
+                stmt.setString(1, pers.getNome());
+                stmt.setString(2, pers.getCognome());
+                stmt.setString(3, pers.getDenominazione());
+                stmt.setString(4, pers.getIndirizzo());
+                stmt.setString(5, pers.getTelefono());
+                stmt.setString(6, pers.getEmail());
+                stmt.setString(7, pers.getVenditore());
+                stmt.setString(8, pers.getAcquirente());
+                stmt.setInt(9, pers.getId());
+                stmt.execute();
+                stmt.close();
+                chiudiConnessione();
+                out="";
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        chiudiConnessione();
+        return out;
+    }
+
+    static String inserisciPersona(Persona pers) {
+        connetti();
+        String out="Errore durante l'inserimento";
+        try {
+            if (!c.isClosed()){
+                String query="INSERT INTO `persone` (nome,cognome,denominazione,indirizzo,telefono,email,venditore,acquirente) VALUES (?,?,?,?,?,?,?,?)";
+                PreparedStatement stmt=c.prepareStatement(query);
+                stmt=c.prepareStatement(query);
+                stmt.setString(1, pers.getNome());
+                stmt.setString(2, pers.getCognome());
+                stmt.setString(3, pers.getDenominazione());
+                stmt.setString(4, pers.getIndirizzo());
+                stmt.setString(5, pers.getTelefono());
+                stmt.setString(6, pers.getEmail());
+                stmt.setString(7, pers.getVenditore());
+                stmt.setString(8, pers.getAcquirente());
+                stmt.execute();
+                stmt.close();
+                chiudiConnessione();
+                out="";
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        chiudiConnessione();
+        return out;
+    }
 }
