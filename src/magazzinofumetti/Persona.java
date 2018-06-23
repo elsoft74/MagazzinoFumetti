@@ -57,7 +57,7 @@ class Persona {
     }
     
     public String toString(){
-        return nome/*+" "+cognome+" ("+denominazione+")"*/;
+        return nome;
     }
     
     public Persona(){
