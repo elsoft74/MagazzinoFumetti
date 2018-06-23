@@ -311,12 +311,15 @@ public class FunzioniDB {
                 PreparedStatement stmt=c.prepareStatement(query);
                 stmt.execute();
                 
-                query="DELETE FROM `lotti_acquisto` WHERE venditore=?";
+                //Si rendono anonimi i dati associati alla persona cancellata
+                //Non vengono però rimossi i dettagli sui lotti acquistati o venduti
+                
+                query="UPDATE `lotti_acquisto` SET venditore=-1 WHERE venditore=?";
                 stmt=c.prepareStatement(query);
                 stmt.setInt(1, selId);
                 stmt.execute();
 
-                query="DELETE FROM `lotti_vendita` WHERE acquirente=?";
+                query="UPDATE `lotti_vendita` SET acquirente=-1 WHERE acquirente=?";
                 stmt=c.prepareStatement(query);
                 stmt.setInt(1, selId);
                 stmt.execute();   
