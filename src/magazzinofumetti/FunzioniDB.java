@@ -116,6 +116,16 @@ public class FunzioniDB {
             stmt=c.prepareStatement(query);
             stmt.execute();
             
+            query="CREATE TABLE IF NOT EXISTS `lotti_vendita` (\n"+
+                    "   `id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
+                    "	`descrizione`	TEXT,\n" +
+                    "	`acquirente`	INTEGER NOT NULL,\n" +
+                    "	`venduti`	INTEGER DEFAULT 0,\n" +
+                    "	`data`	TEXT,\n" +
+                    "	`note`	TEXT)";
+            stmt=c.prepareStatement(query);
+            stmt.execute();
+            
             query="CREATE TABLE IF NOT EXISTS `albi` ("+
                 "`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"+
                 "`editore`	TEXT,"+
@@ -206,6 +216,7 @@ public class FunzioniDB {
                         stmt=c.prepareStatement(query);
                         stmt.setString(1, "S");
                     } else stmt=c.prepareStatement(query);
+                query+=" ORDER BY nome,cognome";
                 ResultSet rr=stmt.executeQuery();
                 while (rr.next()){
                     int id=rr.getInt("id");
@@ -234,7 +245,10 @@ public class FunzioniDB {
         String out="Errore durante l'aggiornamento";
         try {
             if (!c.isClosed()){
-                String query="UPDATE `persone` SET 'nome'=?, 'cognome'=?,'denominazione'=?,'indirizzo'=?,'telefono'=?,'email'=?,'venditore'=?,'acquirente'=? WHERE 'id'=?";
+                String query="UPDATE `persone` SET nome=?,"+
+                        "cognome=?, denominazione=?, indirizzo=?,"+
+                        "telefono=?, email=?, venditore=?, acquirente=?"+
+                        "WHERE id=?";
                 PreparedStatement stmt=c.prepareStatement(query);
                 stmt=c.prepareStatement(query);
                 stmt.setString(1, pers.getNome());
@@ -263,7 +277,9 @@ public class FunzioniDB {
         String out="Errore durante l'inserimento";
         try {
             if (!c.isClosed()){
-                String query="INSERT INTO `persone` (nome,cognome,denominazione,indirizzo,telefono,email,venditore,acquirente) VALUES (?,?,?,?,?,?,?,?)";
+                String query="INSERT INTO `persone` "+
+                        "(nome,cognome,denominazione,indirizzo,telefono,email,venditore,acquirente)"+
+                        " VALUES (?,?,?,?,?,?,?,?)";
                 PreparedStatement stmt=c.prepareStatement(query);
                 stmt=c.prepareStatement(query);
                 stmt.setString(1, pers.getNome());
@@ -284,5 +300,41 @@ public class FunzioniDB {
         }
         chiudiConnessione();
         return out;
+    }
+
+    static void rimuoviPersona(int selId) {
+        connetti();
+        
+        try {
+            if (!c.isClosed()){
+                String query="BEGIN TRANSACTION";
+                PreparedStatement stmt=c.prepareStatement(query);
+                stmt.execute();
+                
+                query="DELETE FROM `lotti_acquisto` WHERE venditore=?";
+                stmt=c.prepareStatement(query);
+                stmt.setInt(1, selId);
+                stmt.execute();
+
+                query="DELETE FROM `lotti_vendita` WHERE acquirente=?";
+                stmt=c.prepareStatement(query);
+                stmt.setInt(1, selId);
+                stmt.execute();   
+                
+                query="DELETE FROM `persone` WHERE id=?";
+                stmt=c.prepareStatement(query);
+                stmt.setInt(1, selId);
+                stmt.execute();                
+                
+                query="COMMIT";
+                stmt=c.prepareStatement(query);
+                stmt.execute();
+                stmt.close();
+                chiudiConnessione();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        chiudiConnessione();
     }
 }

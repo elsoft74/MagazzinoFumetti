@@ -102,6 +102,12 @@ public class Anagrafiche extends javax.swing.JFrame {
         });
 
         cancellaButton.setText("Cancella");
+        cancellaButton.setEnabled(false);
+        cancellaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancellaButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -311,6 +317,7 @@ public class Anagrafiche extends javax.swing.JFrame {
         if (row!=-1) {
             Persona selezionata=(Persona)elencoTable.getValueAt(row, 0);
             aggiornaDettagli(selezionata);
+            cancellaButton.setEnabled(true);
         }
     }//GEN-LAST:event_elencoTableMouseClicked
 
@@ -334,6 +341,7 @@ public class Anagrafiche extends javax.swing.JFrame {
 
     private void nuovoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuovoButtonActionPerformed
         svuotaDettagli();
+        cancellaButton.setEnabled(false);
         nomeTextField.requestFocus();
     }//GEN-LAST:event_nuovoButtonActionPerformed
 
@@ -367,15 +375,8 @@ public class Anagrafiche extends javax.swing.JFrame {
                 err=FunzioniDB.inserisciPersona(pers);
             }
             if (err.equals("")) {
-                if (tuttiRadioButton.isSelected()) {
-                    elenco=FunzioniDB.leggiPersone();
-                } else if (acquirentiRadioButton.isSelected()) {
-                    elenco=FunzioniDB.leggiAcquirenti();
-                    } else  {
-                        elenco=FunzioniDB.leggiVenditori();
-                            }
-                aggiornaElenco();
-                svuotaDettagli();
+                caricaElencoPersone();
+                cancellaButton.setEnabled(false);
             } else {
                 JOptionPane.showMessageDialog(null, err, "Errore!", JOptionPane.ERROR_MESSAGE);
             }
@@ -383,6 +384,17 @@ public class Anagrafiche extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, err, "Errore!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_okButtonActionPerformed
+
+    private void cancellaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancellaButtonActionPerformed
+        int row=elencoTable.getSelectedRow();
+        if (row>-1) {
+            int scelta=JOptionPane.showConfirmDialog(this, "Sicuro di voler cancellare\nla persona selezionata?\nVerranno cancellati anche tutti i movimenti\ndi magazzino associati.", "Attenzione!", JOptionPane.OK_OPTION);
+            if (scelta==JOptionPane.OK_OPTION){
+                FunzioniDB.rimuoviPersona(selId);
+            }
+            caricaElencoPersone();
+        }
+    }//GEN-LAST:event_cancellaButtonActionPerformed
 
     private void aggiornaElenco() {
         elencoTable.setModel(new ElencoPersoneTableModel(elenco.iterator()));
@@ -411,6 +423,18 @@ public class Anagrafiche extends javax.swing.JFrame {
         acquirenteCheckBox.setSelected(false);
         venditoreCheckBox.setSelected(false);
         selId=-1;
+    }
+    
+    private void caricaElencoPersone() {
+        if (tuttiRadioButton.isSelected()) {
+                    elenco=FunzioniDB.leggiPersone();
+                } else if (acquirentiRadioButton.isSelected()) {
+                    elenco=FunzioniDB.leggiAcquirenti();
+                    } else  {
+                        elenco=FunzioniDB.leggiVenditori();
+                            }
+        aggiornaElenco();
+        svuotaDettagli();
     }
     
     /**
@@ -476,7 +500,5 @@ public class Anagrafiche extends javax.swing.JFrame {
     private javax.swing.JCheckBox venditoreCheckBox;
     private javax.swing.JRadioButton venditoriRadioButton;
     // End of variables declaration//GEN-END:variables
-
-    
 
 }
